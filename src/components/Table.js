@@ -3,7 +3,11 @@ import TableLoader from './loaders/Table';
 import TableDeltaHelper from './snippets/TableDeltaHelper';
 
 import {TABLE_FADE_IN, TABLE_FADE_OUT} from '../animations';
-import {DISTRICT_TABLE_COUNT, TABLE_STATISTICS} from '../constants';
+import {
+  DISTRICT_TABLE_COUNT,
+  TABLE_STATISTICS,
+  UNASSIGNED_STATE_CODE,
+} from '../constants';
 import {getStatistic} from '../utils/commonFunctions';
 
 import {
@@ -19,7 +23,7 @@ import {Info} from 'react-feather';
 import {useTranslation} from 'react-i18next';
 import {Link} from 'react-router-dom';
 import {useTrail, useTransition, animated, config} from 'react-spring';
-import {useLocalStorage} from 'react-use';
+import {useSessionStorage} from 'react-use';
 // eslint-disable-next-line
 import worker from 'workerize-loader!../workers/getDistricts';
 
@@ -27,7 +31,7 @@ const Row = lazy(() => import('./Row'));
 
 function Table({data: states, regionHighlighted, setRegionHighlighted}) {
   const {t} = useTranslation();
-  const [sortData, setSortData] = useLocalStorage('sortData', {
+  const [sortData, setSortData] = useSessionStorage('sortData', {
     sortColumn: 'confirmed',
     isAscending: false,
     delta: false,
@@ -165,13 +169,10 @@ function Table({data: states, regionHighlighted, setRegionHighlighted}) {
             <div className="helper-top">
               <div className="helper-left">
                 <div className="info-item">
-                  <OrganizationIcon size={14} />
-                  <p>{`Show/Hide Top ${DISTRICT_TABLE_COUNT} Districts`}</p>
-                </div>
-
-                <div className="info-item notes">
-                  <Info size={15} />
-                  <p>Extra notes</p>
+                  <span>
+                    <OrganizationIcon size={14} />
+                  </span>
+                  <p>{`Toggle between States/Districts`}</p>
                 </div>
 
                 <div className="info-item">
@@ -180,16 +181,28 @@ function Table({data: states, regionHighlighted, setRegionHighlighted}) {
                 </div>
 
                 <div className="info-item sort">
-                  <FilterIcon size={14} />
+                  <span>
+                    <FilterIcon size={14} />
+                  </span>
                   <p>Sort by Descending</p>
                 </div>
 
                 <div className="info-item sort invert">
-                  <FilterIcon size={14} />
+                  <span>
+                    <FilterIcon size={14} />
+                  </span>
                   <p>Sort by Ascending</p>
                 </div>
+
                 <div className="info-item sort">
                   <TableDeltaHelper />
+                </div>
+
+                <div className="info-item notes">
+                  <span>
+                    <Info size={15} />
+                  </span>
+                  <p>Notes</p>
                 </div>
               </div>
 
@@ -263,7 +276,7 @@ function Table({data: states, regionHighlighted, setRegionHighlighted}) {
                 (stateCode) =>
                   stateCode !== 'TT' &&
                   states[stateCode].total?.confirmed &&
-                  !(stateCode === 'UN' && isPerMillion)
+                  !(stateCode === UNASSIGNED_STATE_CODE && isPerMillion)
               )
               .sort((a, b) => sortingFunction(a, b))
               .map((stateCode) => {
@@ -307,7 +320,7 @@ function Table({data: states, regionHighlighted, setRegionHighlighted}) {
             key={'TT'}
             data={states['TT']}
             stateCode={'TT'}
-            {...{regionHighlighted, setRegionHighlighted}}
+            {...{isPerMillion, regionHighlighted, setRegionHighlighted}}
           />
         </div>
       </div>

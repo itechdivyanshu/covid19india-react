@@ -1,3 +1,5 @@
+export const API_ROOT_URL = 'https://api.covid19india.org/v4/min';
+
 export const LOCALE_SHORTHANDS = {
   english: 'en-US',
   hindi: 'hi',
@@ -29,6 +31,8 @@ export const D3_TRANSITION_DURATION = 300;
 
 export const MINIGRAPH_LOOKBACK_DAYS = 20;
 
+export const UNASSIGNED_STATE_CODE = 'UN';
+
 export const UNKNOWN_DISTRICT_KEY = 'Unknown';
 
 export const INDIA_ISO_SUFFIX = 'T00:00:00+05:30';
@@ -39,11 +43,6 @@ export const COLORS = {
   recovered: '#28a745',
   deceased: '#6c757d',
   tested: '#4b1eaa',
-};
-
-export const KEYS = {
-  State: 'stateCode',
-  District: 'districtName',
 };
 
 export const TIMESERIES_CHART_TYPES = {
@@ -268,7 +267,7 @@ export const STATE_NAMES = {
   LD: 'Lakshadweep',
   PY: 'Puducherry',
   TT: 'India',
-  UN: 'Unassigned',
+  [UNASSIGNED_STATE_CODE]: 'Unassigned',
 };
 
 const stateCodes = [];
@@ -280,47 +279,3 @@ Object.keys(STATE_NAMES).map((key, index) => {
 });
 export const STATE_CODES = stateCodesMap;
 export const STATE_CODES_ARRAY = stateCodes;
-
-export const RAW_DATA_PARTITIONS = {
-  v1: {
-    start: new Date(2020, 0, 1),
-    end: new Date(2020, 3, 19),
-  },
-  v2: {
-    start: new Date(2020, 3, 20),
-    end: new Date(2020, 3, 26),
-  },
-  v3: {
-    start: new Date(2020, 3, 27),
-    end: new Date(2020, 4, 9),
-  },
-  v4: {
-    start: new Date(2020, 4, 10),
-    end: new Date(2020, 4, 23),
-  },
-  v5: {
-    start: new Date(2020, 4, 24),
-    end: new Date(2020, 5, 4),
-  },
-  v6: {
-    start: new Date(2020, 5, 5),
-    end: new Date(),
-  },
-};
-
-export const INITIAL_DATA = {
-  TT: {
-    total: {
-      confirmed: 0,
-      recovered: 0,
-      deceased: 0,
-    },
-    delta: {
-      confirmed: 0,
-      recovered: 0,
-      deceased: 0,
-    },
-    last_updated: null,
-    notes: '',
-  },
-};
